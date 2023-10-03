@@ -1,0 +1,13 @@
+diff --git a/cluster_tools/filemerger/src/GateMergeManager.cc b/cluster_tools/filemerger/src/GateMergeManager.cc
+index 24a0c9a5..e97d83eb 100644
+--- a/cluster_tools/filemerger/src/GateMergeManager.cc
++++ b/cluster_tools/filemerger/src/GateMergeManager.cc
+@@ -594,7 +594,7 @@ bool GateMergeManager::MergeGate(TChain* chainG) {
+        if(lastEvent!=event) {
+            lastEvent=event;
+ //           if (fpclassify(iontime)!=FP_NAN && fpclassify(iontime)!=FP_INFINITE) {
+-           if(finite(iontime)){
++           if(isfinite(iontime)){
+              if(maxtime<iontime) maxtime=iontime;
+              // the offset to get a unique event numbering
+              event+=offset;

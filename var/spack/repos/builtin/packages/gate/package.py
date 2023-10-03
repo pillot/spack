@@ -25,7 +25,12 @@ class Gate(CMakePackage):
 
     homepage = "http://opengatecollaboration.org/"
     url = "https://github.com/OpenGATE/Gate/archive/v9.0.tar.gz"
+    git = "https://github.com/OpenGATE/Gate.git"
 
+    version("develop", branch="develop")
+
+    version("9.3", sha256="5faa4bede5d249eb627e20321373947374886614aea4a43ae8985c2ca6a486c7")
+    version("9.2", sha256="6fad86002dacae9d1f76ed0c455847d5d8960f667570292066b211a8b83247ee")
     version("9.1", sha256="aaab874198500b81d45b27cc6d6a51e72cca9519910b893a5c85c8e6d3ffa4fc")
     version("9.0", sha256="8354f392facc0b7ae2ddf0eed61cc43136195b198ba399df25e874886b8b69cb")
 
@@ -40,12 +45,15 @@ class Gate(CMakePackage):
 
     depends_on("geant4@:10.6~threads", when="@9.0")  # Gate needs a non-threaded geant4
     depends_on("geant4@:10.7~threads", when="@9.1")  # Gate needs a non-threaded geant4
+    depends_on("geant4@11.0~threads", when="@9.2")
+    depends_on("geant4@11.1~threads", when="@9.3")
     depends_on("root")
     depends_on("itk+rtk", when="+rtk")
 
     patch("cluster_tools_filemerger_Makefile.patch")
     patch("cluster_tools_jobsplitter_Makefile.patch")
     patch("cluster_tools_jobsplitter_platform.patch")
+    patch("cluster_tools_filemerger_GateMergeManager.patch")
 
     def cmake_args(self):
         args = []
@@ -54,6 +62,9 @@ class Gate(CMakePackage):
             args.extend(["-DGATE_USE_ITK=ON", "-DGATE_USE_RTK=ON"])
         else:
             args.extend(["-DGATE_USE_ITK=OFF", "-DGATE_USE_RTK=OFF"])
+
+        # select the same C++ standard as ROOT
+        args.append(self.define('CMAKE_CXX_STANDARD', self.spec["root"].variants["cxxstd"].value))
 
         return args
 
