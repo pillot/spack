@@ -1196,6 +1196,7 @@ class PackageBase(WindowsRPath, PackageViewMixin, metaclass=PackageMeta):
             raise ValueError("Cannot retrieve fetcher for package without concrete version.")
         if not self._fetcher:
             self._fetcher = fs.for_package_version(self)
+            self._fetcher.set_package(self)
         return self._fetcher
 
     @fetcher.setter
